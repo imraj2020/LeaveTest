@@ -1,6 +1,8 @@
 package com.cse.leavetest;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cse.leavetest.MyAdapter.MyAdapter;
+import com.cse.leavetest.MyAdapter.RoomAdapter;
 import com.cse.leavetest.Network.LeaveApiClient;
 import com.cse.leavetest.Network.LeaveSummary;
 import com.cse.leavetest.Room.MyRoomDB;
@@ -30,7 +33,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     public MyRoomDB roomDB;
     TextView LeaveSummary;
-    ListView MyListView;
+    RecyclerView MyListView;
     MyAdapter myAdapter;
     List<StudentInfo> arrayList;
 
@@ -42,17 +45,20 @@ public class MainActivity extends AppCompatActivity {
         MyListView = findViewById(R.id.mylistview);
         arrayList = new ArrayList<>();
 
-        loaddatainlistview();
         setDatabase();
         leaveSummary();
-
+        loaddatainlistview();
     }
 
     private void loaddatainlistview() {
         arrayList = roomDB.studentDAO().getAllStudent();
-        myAdapter = new MyAdapter(this, (ArrayList<StudentInfo>) arrayList);
-        MyListView.setAdapter(myAdapter);
-        myAdapter.notifyDataSetChanged();
+        RoomAdapter adapter = new RoomAdapter(arrayList, this);
+        MyListView.setLayoutManager(new LinearLayoutManager(this));
+        MyListView.setAdapter(adapter);
+//        Toast.makeText(this, arrayList.size() + "", Toast.LENGTH_SHORT).show();
+//        myAdapter = new MyAdapter(this, (ArrayList<StudentInfo>) arrayList);
+//        MyListView.setAdapter(myAdapter);
+//        myAdapter.notifyDataSetChanged();
 
     }
 
